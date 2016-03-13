@@ -63,6 +63,23 @@ LinkedList.prototype.removeFromEnd = function () {
   return temp;
 };
 
+LinkedList.prototype.removeFromBeginning = function () {
+  var temp;
+
+  if (this.size === 1) {
+    temp = this.head.value;
+    this.tail = null;
+    this.head = null;
+  } else if (this.size > 1) {
+    temp = this.head.value;
+    this.head = this.head.next;
+  }
+  if (this.size > 0) {
+    this.size--;
+  }
+  return temp;
+};
+
 LinkedList.prototype.contains = function (value) {
   var checkNode = function (node) {
     if (node.value === value) {
