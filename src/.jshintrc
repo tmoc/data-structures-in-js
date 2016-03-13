@@ -1,0 +1,10 @@
+{
+  "node": true,
+  "bitwise": true,
+  "eqeqeq": true,
+  "latedef": "nofunc",
+  "newcap": true,
+  "noarg": true,
+  "undef": true,
+  "debug": true
+}

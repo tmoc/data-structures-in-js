@@ -1,0 +1,9 @@
+
+{
+  "name": "data-structures-in-js",
+  "version": "0.0.0",
+  "author": "Tom O'Connell",
+  "dependencies": {
+    "chai": "3.5.0"
+  }
+}

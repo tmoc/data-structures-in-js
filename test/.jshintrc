@@ -1,0 +1,18 @@
+{
+  "node": true,
+  "bitwise": true,
+  "eqeqeq": true,
+  "latedef": "nofunc",
+  "newcap": true,
+  "noarg": true,
+  "undef": true,
+  "debug": true,
+  "globals": {
+    "describe": true,
+    "it": true,
+    "before": true,
+    "beforeEach": true,
+    "after": true,
+    "afterEach": true
+  }
+}
