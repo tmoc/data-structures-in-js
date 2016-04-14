@@ -1,6 +1,6 @@
 
 var BinarySearchTree = function () {
-  this.count = 0;
+  this._count = 0;
   this._root = null;
 };
 
@@ -55,7 +55,7 @@ BinarySearchTree.prototype._getParentNode = function (node, value) {
 };
 
 BinarySearchTree.prototype._getParent = function (value) {
-  if (this.count < 2 || this._root === null || this._root.value === value) {
+  if (this._count < 2 || this._root === null || this._root.value === value) {
     return null;
   } else {
     return this._getParentNode(this._root, value);
@@ -76,7 +76,7 @@ BinarySearchTree.prototype.insert = function (value) {
   } else {
     this._addNode(this._root, value);
   }
-  this.count++;
+  this._count++;
 };
 
 BinarySearchTree.prototype.remove = function (value) {
@@ -90,9 +90,9 @@ BinarySearchTree.prototype.remove = function (value) {
     return false;
   }
 
-  if (this.count === 1) {
+  if (this._count === 1) {
     this._root = null;
-    this.count = 0;
+    this._count = 0;
     return true;
   }
 
@@ -127,7 +127,7 @@ BinarySearchTree.prototype.remove = function (value) {
         }
       }
     }
-    this.count--;
+    this._count--;
     return true;
   }
 
@@ -172,7 +172,7 @@ BinarySearchTree.prototype.remove = function (value) {
       }
     }
   }
-  this.count--;
+  this._count--;
   return true;
 };
 
