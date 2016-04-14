@@ -109,4 +109,23 @@ describe('binary-search-tree', function () {
     expect(order[4]).to.equal(4);
   });
 
+  it('Should return the largest value.', function () {
+    var bst = new BinarySearchTree();
+    bst.insert(2);
+    bst.insert(1);
+    bst.insert(3);
+    bst.insert(0);
+    bst.insert(4);
+    expect(bst.max()).to.equal(4);
+  });
+
+  it('Should return the smallest value.', function () {
+    var bst = new BinarySearchTree();
+    bst.insert(2);
+    bst.insert(1);
+    bst.insert(3);
+    bst.insert(0);
+    bst.insert(4);
+    expect(bst.min()).to.equal(0);
+  });
 });

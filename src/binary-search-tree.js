@@ -281,5 +281,36 @@ BinarySearchTree.prototype.breadthFirst = function (process) {
   }
 };
 
+BinarySearchTree.prototype.max = function () {
+  var max;
+
+  if (this._root === null) {
+    return;
+  }
+
+  max = this._root;
+
+  while (max.right !== null) {
+    max = max.right;
+  }
+
+  return max.value;
+};
+
+BinarySearchTree.prototype.min = function () {
+  var min;
+
+  if (this._root === null) {
+    return;
+  }
+
+  min = this._root;
+
+  while (min.left !== null) {
+    min = min.left;
+  }
+
+  return min.value;
+};
 
 module.exports = BinarySearchTree;
