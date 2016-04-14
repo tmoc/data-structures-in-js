@@ -9,9 +9,7 @@ BinarySearchTree.prototype._makeNode = function (value) {
 };
 
 BinarySearchTree.prototype._addNode = function (node, value) {
-  if (node === null) {
-    node = this._makeNode(value);
-  } else if (value < node.value) {
+  if (value < node.value) {
     if (node.left === null) {
       node.left = this._makeNode(value);
     } else {
@@ -311,6 +309,10 @@ BinarySearchTree.prototype.min = function () {
   }
 
   return min.value;
+};
+
+BinarySearchTree.prototype.size = function () {
+  return this._count;
 };
 
 module.exports = BinarySearchTree;

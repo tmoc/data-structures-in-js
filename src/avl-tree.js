@@ -64,14 +64,13 @@ AVLTree.prototype._maxHeight = function (leftNode, rightNode) {
   return Math.max(leftNodeHeight, rightNodeHeight);
 };
 
-AVLTree.prototype.checkBalance = function (node) {
+AVLTree.prototype._checkBalance = function (node) {
   if (this._balanceFactor(node.left, node.right) === 2) { // Left too high.
     if (this._balanceFactor(node.left.left, node.left.right) > 0) {
       this._rightRotation(node);
     } else {
       this._leftAndRightRotation(node);
     }
-
   } else if (this._balanceFactor(node.left, node.right) === -2) { // Right too high.
     if (this._balanceFactor(node.right.left, node.right.right) < 0) {
       this._leftRotation(node);
@@ -84,9 +83,41 @@ AVLTree.prototype.checkBalance = function (node) {
 };
 
 AVLTree.prototype._addNode = function (node, value) {
-
+  if (value < node.value) {
+    if (node.left === null) {
+      node.left = this._makeNode(value);
+    } else {
+      this._addNode(node.left, value);
+    }
+  } else {
+    if (node.right === null) {
+      node.right = this._makeNode(value);
+    } else {
+      this._addNode(node.right, value);
+    }
+  }
+  this._checkBalance(node);
 };
 
 AVLTree.prototype.insert = function (value) {
-
+  if (this._root === null) {
+    this._root = this._makeNode(value);
+  } else {
+    this._addNode(this._root, value);
+  }
+  this._count++;
 };
+
+AVLTree.prototype.size = function () {
+  return this._count;
+};
+
+AVLTree.prototype.height = function () {
+  if (this._root === null) {
+    return -1;
+  } else {
+    return this._root.height;
+  }
+};
+
+module.exports = AVLTree;
