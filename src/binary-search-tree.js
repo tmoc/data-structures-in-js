@@ -1,7 +1,7 @@
 
 var BinarySearchTree = function () {
   this.count = 0;
-  this.root = null;
+  this._root = null;
 };
 
 BinarySearchTree.prototype._makeNode = function (value) {
@@ -55,15 +55,15 @@ BinarySearchTree.prototype._getParentNode = function (node, value) {
 };
 
 BinarySearchTree.prototype._getParent = function (value) {
-  if (this.count < 2 || this.root === null || this.root.value === value) {
+  if (this.count < 2 || this._root === null || this._root.value === value) {
     return null;
   } else {
-    return this._getParentNode(this.root, value);
+    return this._getParentNode(this._root, value);
   }
 };
 
 BinarySearchTree.prototype.contains = function (value) {
-  if (this._getNode(this.root, value) === null) {
+  if (this._getNode(this._root, value) === null) {
     return false;
   } else {
     return true;
@@ -71,16 +71,16 @@ BinarySearchTree.prototype.contains = function (value) {
 };
 
 BinarySearchTree.prototype.insert = function (value) {
-  if (this.root === null) {
-    this.root = this._makeNode(value);
+  if (this._root === null) {
+    this._root = this._makeNode(value);
   } else {
-    this._addNode(this.root, value);
+    this._addNode(this._root, value);
   }
   this.count++;
 };
 
 BinarySearchTree.prototype.remove = function (value) {
-  var nodeToRemove = this._getNode(this.root, value);
+  var nodeToRemove = this._getNode(this._root, value);
   var parentNode;
   var largestOnLeft;
   var largestOnLeftParent;
@@ -91,21 +91,21 @@ BinarySearchTree.prototype.remove = function (value) {
   }
 
   if (this.count === 1) {
-    this.root = null;
+    this._root = null;
     this.count = 0;
     return true;
   }
 
   parentNode = this._getParent(value);
 
-  // Covers edge case; removing the root and there is more than 1 node.
+  // Covers edge case; removing the _root and there is more than 1 node.
   if (parentNode === null) {
-    if (this.root.left === null && this.root.right !== null) {
-      this.root = this.root.right;
-    } else if (this.root.left !== null && this.root.right === null) {
-      this.root = this.root.left;
+    if (this._root.left === null && this._root.right !== null) {
+      this._root = this._root.right;
+    } else if (this._root.left !== null && this._root.right === null) {
+      this._root = this._root.left;
     } else {
-      largestOnLeft = this.root.left;
+      largestOnLeft = this._root.left;
       parentIsTheNodeToRemove = true;
 
       while (largestOnLeft.right !== null) {
@@ -114,11 +114,11 @@ BinarySearchTree.prototype.remove = function (value) {
       }
 
       if (parentIsTheNodeToRemove === true) {
-        this.root.value = this.root.left.value;
-        this.root.left = null;
+        this._root.value = this._root.left.value;
+        this._root.left = null;
       } else {
         largestOnLeftParent = this._getParent(largestOnLeft.value);
-        this.root.value = largestOnLeft.value;
+        this._root.value = largestOnLeft.value;
 
         if (largestOnLeft.left !== null) {
           largestOnLeftParent.right = largestOnLeft.left;
@@ -175,5 +175,111 @@ BinarySearchTree.prototype.remove = function (value) {
   this.count--;
   return true;
 };
+
+BinarySearchTree.prototype._preOrderTraversal = function (node, process) {
+  if (node === null) {
+    return;
+  }
+  process(node.value);
+  this._preOrderTraversal(node.left, process);
+  this._preOrderTraversal(node.right, process);
+};
+
+BinarySearchTree.prototype.preOrder = function (process) {
+  if (typeof process !== 'function') {
+    throw new Error('Must include processing function.');
+  }
+  this._preOrderTraversal(this._root, process);
+};
+
+BinarySearchTree.prototype._inOrderTraversal = function (node, process) {
+  if (node === null) {
+    return;
+  }
+  this._inOrderTraversal(node.left, process);
+  process(node.value);
+  this._inOrderTraversal(node.right, process);
+};
+
+BinarySearchTree.prototype.inOrder = function (process) {
+  if (typeof process !== 'function') {
+    throw new Error('Must include processing function.');
+  }
+  this._inOrderTraversal(this._root, process);
+};
+
+BinarySearchTree.prototype._postOrderTraversal = function (node, process) {
+  if (node === null) {
+    return;
+  }
+  this._postOrderTraversal(node.left, process);
+  this._postOrderTraversal(node.right, process);
+  process(node.value);
+};
+
+BinarySearchTree.prototype.postOrder = function (process) {
+  if (typeof process !== 'function') {
+    throw new Error('Must include processing function.');
+  }
+  this._postOrderTraversal(this._root, process);
+};
+
+BinarySearchTree.prototype._makeQueue = function () {
+  var storage = {};
+  var size = 0;
+  var head = 0;
+
+  return {
+    enqueue: function (value) {
+      storage[head + size] = value;
+      size++;
+    },
+    dequeue: function () {
+      var temp;
+
+      if (size === 0) {
+        return;
+      }
+
+      temp = storage[head];
+      size--;
+      head++;
+
+      return temp;
+    },
+    size: function () {
+      return size;
+    }
+  };
+};
+
+BinarySearchTree.prototype.breadthFirst = function (process) {
+  var queue;
+  var current;
+
+  if (typeof process !== 'function') {
+    throw new Error('Must include processing function.');
+  }
+
+  if (this._root === null) {
+    return;
+  }
+
+  queue = this._makeQueue();
+  queue.enqueue(this._root);
+
+  while (queue.size() !== 0) {
+    current = queue.dequeue();
+    process(current.value);
+
+    if (current.left !== null) {
+      queue.enqueue(current.left);
+    }
+    if (current.right !== null) {
+      queue.enqueue(current.right);
+    }
+  }
+};
+
 
 module.exports = BinarySearchTree;
