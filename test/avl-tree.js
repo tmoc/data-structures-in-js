@@ -18,26 +18,37 @@ describe('avl-tree', function () {
     expect(avlTree.height()).to.equal(2);
   });
 
-  // it('Should remove values.', function () {
-  //   var bst = new BinarySearchTree();
-  //
-  //   bst.insert(2);
-  //   bst.insert(1);
-  //   bst.insert(3);
-  //   bst.insert(900);
-  //
-  //   bst.remove(2);
-  //   bst.remove(1);
-  //   bst.remove(3);
-  //   bst.remove(900);
-  //
-  //   expect(bst.count).to.equal(0);
-  //   expect(bst.contains(2)).to.equal(false);
-  //   expect(bst.contains(1)).to.equal(false);
-  //   expect(bst.contains(3)).to.equal(false);
-  //   expect(bst.contains(900)).to.equal(false);
-  // });
-  //
+  it('Should remove values.', function () {
+    var avlTree = new AVLTree();
+
+    avlTree.insert(2);
+    avlTree.insert(1);
+    avlTree.insert(3);
+    avlTree.insert(900);
+
+    expect(avlTree.size()).to.equal(4);
+    expect(avlTree.contains(2)).to.equal(true);
+    avlTree.remove(2);
+    expect(avlTree.contains(2)).to.equal(false);
+
+    expect(avlTree.size()).to.equal(3);
+    expect(avlTree.contains(1)).to.equal(true);
+    avlTree.remove(1);
+    expect(avlTree.contains(1)).to.equal(false);
+
+    expect(avlTree.size()).to.equal(2);
+    expect(avlTree.contains(3)).to.equal(true);
+    avlTree.remove(3);
+    expect(avlTree.contains(3)).to.equal(false);
+
+    expect(avlTree.size()).to.equal(1);
+    expect(avlTree.contains(900)).to.equal(true);
+    avlTree.remove(900);
+    expect(avlTree.contains(900)).to.equal(false);
+
+    expect(avlTree.size()).to.equal(0);
+  });
+
   // it('Should perform pre-order traversal.', function () {
   //   var bst = new BinarySearchTree();
   //   var order = [];

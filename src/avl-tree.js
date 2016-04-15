@@ -15,6 +15,28 @@ AVLTree.prototype._getNode = function (node, value) {
   }
 };
 
+AVLTree.prototype._getParentNode = function (node, value) {
+  if (node === null) {
+    return null;
+  } else if (value < node.value) {
+    if (value === node.left) {
+      return node;
+    } else {
+      return this._getParentNode(node.left, value);
+    }
+  } else {
+    if (value === node.right) {
+      return node;
+    } else {
+      return this._getParentNode(node.right, value);
+    }
+  }
+};
+
+AVLTree.prototype._getParent = function (value) {
+  return this._getParentNode(this._root);
+};
+
 AVLTree.prototype.contains = function (value) {
   if (this._getNode(this._root, value) === null) {
     return false;
@@ -118,6 +140,105 @@ AVLTree.prototype.height = function () {
   } else {
     return this._root.height;
   }
+};
+
+AVLTree.prototype.remove = function (value) {
+  var pathStack = []; // Store all nodes visited for rebalancing.
+  var nodeToRemove = this._root;
+  var parentNode;
+  var largestOnLeft;
+  var largestOnLeftParent;
+  var parentOfLargestOnLeftIsNodeToRemove;
+
+  while (nodeToRemove !== null && value !== nodeToRemove.value) {
+    pathStack.push(nodeToRemove);
+    if (value < nodeToRemove.value) {
+      nodeToRemove = nodeToRemove.left;
+    } else {
+      nodeToRemove = nodeToRemove.right;
+    }
+  }
+
+  if (nodeToRemove === null) {
+    return false;
+  }
+
+  if (this._count === 1) {
+    this._root = null;
+    this._count = 0;
+    return;
+  }
+
+  parentNode = this._getParent(value);
+
+  // Removing the root with multiple nodes in the tree.
+  if (parentNode === null) {
+    if (this._root.left !== null && this._root.right === null) {
+      this._root = this._root.left;
+    } else if (this._root.left === null && this._root.right !== null) {
+      this._root = this._root.right;
+    } else {
+      largestOnLeft = this._root.left;
+      parentOfLargestOnLeftIsNodeToRemove = true;
+
+      while (largestOnLeft.right !== null) {
+        largestOnLeft = largestOnLeft.right;
+        parentOfLargestOnLeftIsNodeToRemove = false;
+      }
+
+      if (parentOfLargestOnLeftIsNodeToRemove === false) {
+        largestOnLeftParent = this._getParent(largestOnLeft.value);
+        this._root.value = largestOnLeft.value;
+        largestOnLeftParent.right = null;
+      } else {
+        this._root.value = this._root.left.value;
+        this._root.left = null;
+      }
+    }
+  } else {
+    if (nodeToRemove.left === null && nodeToRemove.right === null) {
+      if (nodeToRemove.value < parentNode.value) {
+        parentNode.left = null;
+      } else {
+        parentNode.right = null;
+      }
+    } else if (nodeToRemove.left !== null && nodeToRemove.right === null) {
+      if (nodeToRemove.value < parentNode.value) {
+        parentNode.left = nodeToRemove.left;
+      } else {
+        parentNode.right = nodeToRemove.left;
+      }
+    } else if (this._root.left === null && this._root.right !== null) {
+      if (nodeToRemove.value < parentNode.value) {
+        parentNode.left = nodeToRemove.right;
+      } else {
+        parentNode.right = nodeToRemove.right;
+      }
+    } else {
+      largestOnLeft = nodeToRemove.left;
+      parentOfLargestOnLeftIsNodeToRemove = true;
+
+      while (largestOnLeft.right !== null) {
+        largestOnLeft = largestOnLeft.right;
+        parentOfLargestOnLeftIsNodeToRemove = false;
+      }
+
+      if (parentOfLargestOnLeftIsNodeToRemove === false) {
+        largestOnLeftParent = this._getParent(largestOnLeft.value);
+        nodeToRemove.value = largestOnLeft.value;
+        largestOnLeftParent.right = null;
+      } else {
+        nodeToRemove.value = nodeToRemove.left.value;
+        nodeToRemove.left = null;
+      }
+    }
+  }
+
+  // Rebalance tree.
+  while (pathStack.length !== 0) {
+    this._checkBalance(pathStack.pop());
+  }
+  this._count--;
 };
 
 module.exports = AVLTree;
