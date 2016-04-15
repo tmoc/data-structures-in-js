@@ -241,4 +241,133 @@ AVLTree.prototype.remove = function (value) {
   this._count--;
 };
 
+AVLTree.prototype._preOrderTraversal = function (node, process) {
+  if (node !== null) {
+    process(node.value);
+    this._preOrderTraversal(node.left, process);
+    this._preOrderTraversal(node.right, process);
+  }
+};
+
+AVLTree.prototype.preOrder = function (process) {
+  if (typeof process !== 'function') {
+    throw new Error('Must provide processing function.');
+  }
+  this._preOrderTraversal(this._root, process);
+};
+
+AVLTree.prototype._inOrderTraversal = function (node, process) {
+  if (node !== null) {
+    this._inOrderTraversal(node.left, process);
+    process(node.value);
+    this._inOrderTraversal(node.right, process);
+  }
+};
+
+AVLTree.prototype.inOrder = function (process) {
+  if (typeof process !== 'function') {
+    throw new Error('Must provide processing function.');
+  }
+  this._inOrderTraversal(this._root, process);
+};
+
+AVLTree.prototype._postOrderTraversal = function (node, process) {
+  if (node !== null) {
+    this._postOrderTraversal(node.left, process);
+    this._postOrderTraversal(node.right, process);
+    process(node.value);
+  }
+};
+
+AVLTree.prototype.postOrder = function (process) {
+  if (typeof process !== 'function') {
+    throw new Error('Must provide processing function.');
+  }
+  this._postOrderTraversal(this._root, process);
+};
+
+AVLTree.prototype._makeQueue = function () {
+  var storage = {};
+  var size = 0;
+  var head = 0;
+
+  return {
+    enqueue: function (value) {
+      storage[head + size] = value;
+      size++;
+    },
+    dequeue: function () {
+      var temp;
+
+      if (size === 0) {
+        return;
+      }
+
+      temp = storage[head];
+      head++;
+      size--;
+      return temp;
+    },
+    length: function () {
+      return size;
+    }
+  };
+};
+
+AVLTree.prototype.breadthFirst = function (process) {
+  var queue = this._makeQueue();
+  var current;
+
+  if (this._root === null) {
+    return;
+  }
+
+  queue.enqueue(this._root);
+
+  while (queue.length() !== 0) {
+    current = queue.dequeue();
+    process(current.value);
+
+    if (current.left !== null) {
+      queue.enqueue(current.left);
+    }
+    if (current.right !== null) {
+      queue.enqueue(current.right);
+    }
+  }
+};
+
+AVLTree.prototype.max = function () {
+  var current;
+
+  if (this._root === null) {
+    return null;
+  }
+
+  current = this._root;
+
+  while (current.right !== null) {
+    current = current.right;
+  }
+
+  return current.value;
+};
+
+AVLTree.prototype.min = function () {
+  var current;
+
+  if (this._root === null) {
+    return null;
+  }
+
+  current = this._root;
+
+  while (current.left !== null) {
+    current = current.left;
+  }
+
+  return current.value;
+};
+
+
 module.exports = AVLTree;
